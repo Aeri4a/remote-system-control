@@ -1,5 +1,6 @@
 # Remote System Control
 
-### Packages
-#### Core
+### Core
+#### Packages
 - Paramiko (for SSH)
+- Docker
