@@ -1,0 +1,17 @@
+
+services:
+  provider:
+    build:
+      context: ./provider
+      dockerfile: Dockerfile
+    restart: always
+    enviroment:
+      - TEST=TEST
+  
+  connector:
+    build:
+      context: ./connector
+      dockerfile: Dockerfile
+    restart: always
+    enviroment:
+      - TEST=TEST

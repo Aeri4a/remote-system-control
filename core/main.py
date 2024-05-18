@@ -45,7 +45,7 @@ if __name__ == "__main__":
 
     print("[C1] - Checking container state")
     with open("./connectorState.json", "r", encoding="utf-8") as conStFile:
-        connectorState = json.load(conStFile)    
+        connectorState = json.load(conStFile)
 
     # Process decision
     isConnectionNeeded = serverInfo[ConInfo.SERVER_CONNECT] == ConInfo.TRUE
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         if connectorState["status"] == "on":
             print("[C1] - Killing current container")
             try:
-                docker.kill("Connector")
+                docker.stop("Connector")
                 docker.remove("Connector")
             except:
                 pass
@@ -81,7 +81,7 @@ if __name__ == "__main__":
         if connectorState["status"] == "on":
             print("[C1] - Killing current container")
             try:
-                docker.kill("Connector")
+                docker.stop("Connector")
                 docker.remove("Connector")
             except:
                 pass
