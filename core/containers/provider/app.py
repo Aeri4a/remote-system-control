@@ -5,6 +5,14 @@ from utils import *
 app = Flask(__name__)
 
 """
+[GET]
+Connectitvity info
+"""
+@app.route("/", methods=["GET"])
+def connectivity():
+    return '', 200
+
+"""
 [POST]
 Accept: body -> { mac: mac_address, broadcast: broadcast_address }
 """

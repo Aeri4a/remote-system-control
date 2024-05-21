@@ -1,0 +1,32 @@
+
+services:
+  openssh:
+    image: lscr.io/linuxserver/openssh-server:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Warsaw
+      - PUBLIC_KEY_FILE=${KEY_PATH}
+      - SUDO_ACCESS=false
+      - PASSWORD_ACCESS=false
+      - USER_NAME=userus
+      - LOG_STDOUT=true
+    volumes:
+      - ./config:/config
+    ports:
+      - ${SSH_PORT}:2222
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - 5173:5173
+    restart: unless-stopped
