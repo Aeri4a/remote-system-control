@@ -6,7 +6,7 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-      - PUBLIC_KEY_FILE=${KEY_PATH}
+      - PUBLIC_KEY_FILE=${PUBLIC_KEY_PATH}
       - SUDO_ACCESS=false
       - PASSWORD_ACCESS=false
       - USER_NAME=userus
@@ -28,5 +28,5 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - 5173:5173
+      - 8000:8000
     restart: unless-stopped

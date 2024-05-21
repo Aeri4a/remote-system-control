@@ -3,6 +3,3 @@ __pycache__
 .env
 notes.txt
 .env.docker
-
-cert
-*.pub
