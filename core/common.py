@@ -7,6 +7,10 @@ class Env(str, Enum):
     TRUSTED_SERVER_PASSWORD = "TRUSTED_SERVER_PASSWORD"
     FILE_PATH_CLIENT = "FILE_PATH_CLIENT"
     FILE_PATH_SERVER = "FILE_PATH_SERVER"
+    SSH_USER = "SSH_USER"
+    SSH_PORT = "SSH_PORT"
+    OUT_API_PORT = "OUT_API_PORT"
+    IN_API_PORT = "IN_API_PORT"
 
 class ConInfo(str, Enum):
     CLIENT_CONNECTED = "CONNECTED"
@@ -17,7 +21,7 @@ class ConInfo(str, Enum):
     FALSE = "F"
 
 # TODO: allow empty parse and skip white chars
-def parseConfigFile(input):
+def parseConfigFile(input) -> dict:
     outputVariables = {}
 
     for line in input.readlines():
@@ -25,3 +29,11 @@ def parseConfigFile(input):
         outputVariables[key] = var.strip()
     
     return outputVariables
+
+def serializeConfigFile(config: dict) -> str:
+    outputString = ""
+
+    for key, value in config.items():
+        outputString += f'{key}={value}\n'
+    
+    return outputString

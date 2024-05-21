@@ -1,15 +1,13 @@
-import json
+import json, time
 from paramiko import SSHClient, AutoAddPolicy
-from python_on_whales import docker
+from python_on_whales import docker, DockerClient, exceptions
 from common import *
-import time
 
 if __name__ == "__main__":
     print("[C0] - Core started")
     print("[C0] - Reading env file")
-    envFile = open("../.env", "r")
-    varsEnv = parseConfigFile(envFile)
-    envFile.close()
+    with open("../.env", "r") as envFile:
+        varsEnv = parseConfigFile(envFile)    
 
     # TODO: Key authentication
     print("[C1] - Establishing connection with trusted server...")
@@ -43,57 +41,41 @@ if __name__ == "__main__":
     serverInfo = parseConfigFile(stdout)
     print("[C1] - Status information gained")
 
-    print("[C1] - Checking container state")
-    with open("./connectorState.json", "r", encoding="utf-8") as conStFile:
-        connectorState = json.load(conStFile)
+    print("[C1] - Saving current configuration")
+    with open(".env.docker", "w", encoding="utf-8") as dockerEnv:
+        dockerEnv.write(serializeConfigFile(
+            { **varsEnv, "SSH_HOST": serverInfo[ConInfo.SERVER_ADDRESS] }
+        ))
+
+    dockerClient = DockerClient(
+        compose_files=["./containers/core-docker.yml"],
+        compose_env_file=".env.docker"
+    )
 
     # Process decision
     isConnectionNeeded = serverInfo[ConInfo.SERVER_CONNECT] == ConInfo.TRUE
     if isConnectionNeeded:
         print("[C1] - Server allow connections")
 
-        if connectorState["status"] == "on":
-            print("[C1] - Killing current container")
-            try:
-                docker.stop("Connector")
-                docker.remove("Connector")
-            except:
-                pass
+        if dockerClient.compose.is_installed:
+            print("[C1] - Stopping current compose")
+            dockerClient.compose.down()
+        else:
+            print("[C1] - Compose is not initialized")
+            print("[C1] - Building compose...")
+            dockerClient.compose.build()
 
-        print("[C1] - Starting 'Connector' docker container")
+        print("[C1] - Starting docker containers in compose")
+        dockerClient.compose.up(detach=True)
 
-        # TODO: catch error if cannot be started
-        container = docker.run(
-            image="atlassian/ssh-ubuntu:0.2.2",
-            detach=True,
-            name="Connector"
-        )
-
-        print(f'[C1] - Container started at: {container.state.started_at}')
-
-        connectorState["status"] = "on"
-        connectorState["runid"] = container.id
-
-        print("[C1] - Container started, client is running")
     else:
         print("[C1] - Server not allow connections")
-        
-        if connectorState["status"] == "on":
-            print("[C1] - Killing current container")
-            try:
-                docker.stop("Connector")
-                docker.remove("Connector")
-            except:
-                pass
-        
-        connectorState["status"] = "off"
-        connectorState["runid"] = -1
+        print("[C1] - Stopping current compose...")
+        dockerClient.compose.down()
 
-    with open("./connectorState.json", "w", encoding="utf-8") as conStFile:
-        json.dump(connectorState, conStFile)
 
+    print("[C1] - Saving current running status to server")
     runStat = 'T' if isConnectionNeeded else 'F'
-
     stdin, stdout, stderr = client.exec_command(
         f'sed -i "s/^{ConInfo.CLIENT_RUNNING.value}.*/{ConInfo.CLIENT_RUNNING.value}={runStat}/g" {varsEnv[Env.FILE_PATH_CLIENT]}'
     )
