@@ -1,18 +1,41 @@
 import './App.css'
 import { Box, Button, Card, CardBody, CardHeader } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react';
 import axios from 'axios'
 
-const API_URL = 'http://backend:5000/api';
+const API_URL = 'http://localhost:5000/api';
 
 const App = () => {
+  const toast = useToast();
+
   const connect = () => {
-    const res = axios.get(`${API_URL}/connect`);
-    console.log(res);
+    axios.get(`${API_URL}/connect`).then(_ => {
+      toast({
+        title: 'Allowed external connection',
+        status: 'success'
+      })
+    }).catch(err => {
+      toast({
+        title: 'An error occured :\'(',
+        status: 'error'
+      })
+      console.log(err);
+    });
   }
 
   const disconnect = () => {
-    const res = axios.get(`${API_URL}/disconnect`);
-    console.log(res);
+    axios.get(`${API_URL}/disconnect`).then(_ => {
+      toast({
+        title: 'Disallowed external connection',
+        status: 'success'
+      })
+    }).catch(err => {
+      toast({
+        title: 'An error occured :\'(',
+        status: 'error'
+      })
+      console.log(err);
+    });
   }
 
   const checkConnection = () => {

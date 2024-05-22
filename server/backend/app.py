@@ -1,9 +1,11 @@
 import requests
 from paramiko import SSHClient, AutoAddPolicy
 from flask import Flask
+from flask_cors import CORS, cross_origin
 from utils import *
 
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:8000/"], methods=["GET"])
 
 with open(".env", "r") as envFile:
     varsEnv = parseConfigFile(envFile)
