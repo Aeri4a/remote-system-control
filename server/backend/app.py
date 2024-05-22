@@ -5,7 +5,7 @@ from flask_cors import CORS, cross_origin
 from utils import *
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:8000/"], methods=["GET"])
+CORS(app, origins=["http://localhost:8000/"], methods=["GET"], resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
 with open(".env", "r") as envFile:
     varsEnv = parseConfigFile(envFile)
@@ -84,7 +84,7 @@ def checkConnection():
         f'http://openssh:{varsEnv[Env.OUT_API_PORT]}'
     )
 
-    return response.json()
+    return response.text, 200
 
 if __name__ == "__main__":
     app.run()

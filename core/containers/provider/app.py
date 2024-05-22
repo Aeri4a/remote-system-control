@@ -39,7 +39,8 @@ def deviceWakeOnLAN():
         image="devicewol",
         name="devicewol",
         detach=True,
-        envs={ "DEV_MAC": MAC, "DEV_BROADCAST": BROADCAST }
+        envs={ "DEV_MAC": MAC, "DEV_BROADCAST": BROADCAST },
+        # networks=["host"] TODO: ??
     )
 
     while container.state.running:

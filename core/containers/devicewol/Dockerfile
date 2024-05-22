@@ -1,6 +1,5 @@
-FROM alpine:3.19
+FROM debian:bookworm
 
-RUN apk update && apk upgrade
-RUN apk add --no-cache awake
+RUN apt-get update && apt-get install -y etherwake
 
-CMD ["sh", "-c", "awake -b $DEV_BROADCAST $DEV_MAC"]
+CMD ["sh", "-c", "etherwake $DEV_MAC"]
