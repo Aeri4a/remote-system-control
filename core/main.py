@@ -52,6 +52,11 @@ if __name__ == "__main__":
         compose_env_file=".env.docker"
     )
 
+    print("[C1] - Preparing file for authentication")
+    with open("pub_key", "r") as keyFile, open("./containers/connector/certificate/known_hosts", "w") as authFile:
+        authFile.write(f'[{serverInfo[ConInfo.SERVER_ADDRESS]}]:{envFile[Env.SSH_PORT]} {authFile.readline().strip()}')
+    print("[C1] - Key saved")
+
     # Process decision
     isConnectionNeeded = serverInfo[ConInfo.SERVER_CONNECT] == ConInfo.TRUE
     if isConnectionNeeded:
