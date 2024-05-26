@@ -39,8 +39,18 @@ const App = () => {
   }
 
   const checkConnection = () => {
-    const res = axios.get(`${API_URL}/check-connection`);
-    console.log(res);
+    axios.get(`${API_URL}/check-connection`).then(_ => {
+      toast({
+        title: 'Connection check success',
+        status: 'success'
+      })
+    }).catch(err => {
+      toast({
+        title: 'An error occured :\'(',
+        status: 'error'
+      })
+      console.log(err);
+    });
   }
 
   return (

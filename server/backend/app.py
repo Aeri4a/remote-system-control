@@ -80,11 +80,13 @@ def disconnect():
 
 @app.route("/api/check-connection", methods=["GET"])
 def checkConnection():
-    response = requests.get(
-        f'http://openssh:{varsEnv[Env.OUT_API_PORT]}'
-    )
-
-    return response.text, 200
+    try:
+        response = requests.get(
+            f'http://openssh:{varsEnv[Env.OUT_API_PORT]}'
+        )
+        return response.text, 200
+    except:
+        return '', 400
 
 if __name__ == "__main__":
     app.run()

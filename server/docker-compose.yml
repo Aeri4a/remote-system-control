@@ -6,14 +6,15 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/Warsaw
-      - PUBLIC_KEY_FILE=${PUBLIC_KEY_PATH}
       - SUDO_ACCESS=false
       - PASSWORD_ACCESS=false
       - USER_NAME=userus
       - LOG_STDOUT=true
+      - DOCKER_MODS=linuxserver/mods:openssh-server-ssh-tunnel
     volumes:
-      - ./sshconfig/authorized_keys:/config/.ssh/authorized_keys:ro
-      - ./sshconfig/sshd_config:/config/ssh_host_keys/sshd_config:ro
+      - ./sshconfig/authorized_keys:/config/.ssh/authorized_keys
+    expose:
+      - ${OUT_API_PORT}
     ports:
       - ${SSH_PORT}:2222
     restart: unless-stopped
