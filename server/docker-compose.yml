@@ -12,7 +12,8 @@ services:
       - USER_NAME=userus
       - LOG_STDOUT=true
     volumes:
-      - ./config:/config
+      - ./sshconfig/authorized_keys:/config/.ssh/authorized_keys:ro
+      - ./sshconfig/sshd_config:/config/ssh_host_keys/sshd_config:ro
     ports:
       - ${SSH_PORT}:2222
     restart: unless-stopped
