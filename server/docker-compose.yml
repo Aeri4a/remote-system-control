@@ -2,6 +2,7 @@
 services:
   openssh:
     image: lscr.io/linuxserver/openssh-server:latest
+    hostname: openssh
     environment:
       - PUID=1000
       - PGID=1000
@@ -13,6 +14,7 @@ services:
       - DOCKER_MODS=linuxserver/mods:openssh-server-ssh-tunnel
     volumes:
       - ./sshconfig/authorized_keys:/config/.ssh/authorized_keys
+      - ./sshconfig/host_keys:/config/ssh_host_keys/
     expose:
       - ${OUT_API_PORT}
     ports:
