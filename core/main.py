@@ -66,7 +66,7 @@ if __name__ == "__main__":
             dockerClient.compose.build()
 
         print("[C1] - Starting docker containers in compose")
-        dockerClient.compose.up(detach=True)
+        dockerClient.compose.up(detach=True) # build=True
 
     else:
         print("[C1] - Server not allow connections")

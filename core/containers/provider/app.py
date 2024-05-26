@@ -1,5 +1,5 @@
 from flask import Flask, request
-from python_on_whales import docker, exceptions
+from python_on_whales import docker, exceptions, components
 from utils import *
 
 app = Flask(__name__)
@@ -25,7 +25,7 @@ def deviceWakeOnLAN():
     try:
         container = docker.container.inspect("devicewol")
         print("[devicewol] - Container exists")
-        print("[devicewol] - Starting...")
+        print("[devicewol] - Removing old container...")
         container.remove(force=True)
 
     except exceptions.NoSuchContainer:
@@ -34,13 +34,13 @@ def deviceWakeOnLAN():
             print("[devicewol] - Image is not available")
             buildDockerImage("devicewol")
 
-    print("[devicewol] - Running...")
+    print("[devicewol] - Running container...")
     container = docker.run(
         image="devicewol",
         name="devicewol",
         detach=True,
         envs={ "DEV_MAC": MAC, "DEV_BROADCAST": BROADCAST },
-        # networks=["host"] TODO: ??
+        networks=["host"]
     )
 
     while container.state.running:

@@ -1,11 +1,11 @@
 import requests
 from paramiko import SSHClient, AutoAddPolicy
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from utils import *
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:8000/"], methods=["GET"], resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+CORS(app, origins=["http://localhost:8000/"], methods=["GET", "POST"], resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
 
 with open(".env", "r") as envFile:
     varsEnv = parseConfigFile(envFile)
@@ -83,6 +83,18 @@ def checkConnection():
     try:
         response = requests.get(
             f'http://openssh:{varsEnv[Env.OUT_API_PORT]}'
+        )
+        return response.text, 200
+    except:
+        return '', 400
+
+# Mapped functionalities
+@app.route("/api/devicewol", methods=["POST"])
+def mapDevicewol():
+    try:
+        response = requests.post(
+            f'http://openssh:{varsEnv[Env.OUT_API_PORT]}/devicewol',
+            json=request.get_json()
         )
         return response.text, 200
     except:
