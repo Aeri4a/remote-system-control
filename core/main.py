@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
     print("[C1] - Preparing file for authentication")
     with open("./pub_key", "r") as keyFile, open("./containers/connector/certificate/known_hosts", "w") as authFile:
-        authFile.write(f'[{serverInfo[ConInfo.SERVER_ADDRESS]}]:{varsEnv[Env.SSH_PORT]} {authFile.readlines()[0].strip()}')
+        authFile.write(f'[{serverInfo[ConInfo.SERVER_ADDRESS]}]:{varsEnv[Env.SSH_PORT]} {keyFile.readline().strip()}')
     print("[C1] - Key saved")
 
     # Process decision

@@ -24,7 +24,7 @@ services:
       - IN_API_PORT=${IN_API_PORT}
       - API_HOST=provider
     volumes:
-      - ./certificate/known_hosts:/root/.ssh/known_hosts:ro
+      - ./connector/certificate/known_hosts:/root/.ssh/known_hosts
     networks:
       - api_internal
 
