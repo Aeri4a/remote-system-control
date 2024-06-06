@@ -1,0 +1,10 @@
+[Unit]
+Description=Remote System Control - Core service
+After=multi-user.target
+
+[Service]
+WorkingDirectory={directory}
+ExecStart=/usr/bin/python main.py
+
+Restart=always
+RestartSec=300
