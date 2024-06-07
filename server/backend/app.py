@@ -3,6 +3,7 @@ from paramiko import SSHClient, AutoAddPolicy
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
+from socketio import Client
 from utils import *
 
 app = Flask(__name__)
@@ -14,16 +15,19 @@ socketio = SocketIO(app, cors_allowed_origins='*', always_connect=True)
 with open(".env", "r") as envFile:
     varsEnv = parseConfigFile(envFile)
 
-# --- WebSockets ---
+# --- WebSocket Client ---
+socketClient = Client(f'http://openssh:{varsEnv[Env.OUT_API_PORT]}')
+
+# --- WebSocket Server ---
 @socketio.on('connect')
 def wsConnect():
     print('Client connected')
-    
-    emit('test', 'Hello world!')
+    socketClient.connect()
 
 @socketio.on('disconnect')
 def test_disconnect():
     print('Client disconnected')
+    socketClient.disconnect()
 
 
 # --- RestAPI ---

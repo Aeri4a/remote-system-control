@@ -9,6 +9,7 @@ import DashboardView from "./components/DashboardView";
 import HomeView from "./components/HomeView";
 import WaitingView from "./components/WaitingView";
 import { ServerContext } from "./context/ServerContext";
+import useConnectionSocket from "./hooks/useConnectionSocket";
 
 export enum ServerState {
   ACTIVE = 'active',
@@ -19,6 +20,7 @@ export enum ServerState {
 const App = () => {
   const toast = useToast();
   const [serverState, setServerState] = useState<ServerState>(ServerState.NOT_ACTIVE);
+  const socketx = useConnectionSocket({ serverState, updateServerState: setServerState });
 
   const CurrentView = () => {
     switch (serverState) {
