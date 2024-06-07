@@ -2,14 +2,31 @@ import requests
 from paramiko import SSHClient, AutoAddPolicy
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
+from flask_socketio import SocketIO, emit
 from utils import *
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:8000/"], methods=["GET", "POST"], resources={r"/api/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+app.config['SECRET_KEY'] = 'secret'
+    
+CORS(app, origins='*', methods=["GET", "POST"], resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
+socketio = SocketIO(app, cors_allowed_origins='*', always_connect=True)
 
 with open(".env", "r") as envFile:
     varsEnv = parseConfigFile(envFile)
 
+# --- WebSockets ---
+@socketio.on('connect')
+def wsConnect():
+    print('Client connected')
+    
+    emit('test', 'Hello world!')
+
+@socketio.on('disconnect')
+def test_disconnect():
+    print('Client disconnected')
+
+
+# --- RestAPI ---
 @app.route("/api/connect", methods=["GET"])
 def connect():
     print("[S] - Establishing connection with trusted server...")
@@ -101,4 +118,5 @@ def mapDevicewol():
         return '', 400
 
 if __name__ == "__main__":
-    app.run()
+    # app.run()
+    socketio.run(app)
