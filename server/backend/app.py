@@ -10,7 +10,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
     
 CORS(app, origins='*', methods=["GET", "POST"], resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
-socketio = SocketIO(app, cors_allowed_origins='*', always_connect=True)
+socketServer = SocketIO(app, cors_allowed_origins='*', always_connect=True)
 
 with open(".env", "r") as envFile:
     varsEnv = parseConfigFile(envFile)
@@ -19,16 +19,20 @@ with open(".env", "r") as envFile:
 socketClient = Client(f'http://openssh:{varsEnv[Env.OUT_API_PORT]}')
 
 # --- WebSocket Server ---
-@socketio.on('connect')
-def wsConnect():
+@socketServer.on('connect')
+def WSServerConnect():
     print('Client connected')
-    socketClient.connect()
+    socketClient.connect(retry=True)
 
-@socketio.on('disconnect')
-def test_disconnect():
+@socketServer.on('disconnect')
+def WSServerDisconnect():
     print('Client disconnected')
     socketClient.disconnect()
 
+@socketServer.on('SERVER_ACTIVE')
+def WSClientServerStatus():
+    print('Recieved provider status')
+    socketServer.emit('SERVER_ACTIVE')
 
 # --- RestAPI ---
 @app.route("/api/server-status", methods=["GET"])
@@ -156,4 +160,4 @@ def mapDevicewol():
 
 if __name__ == "__main__":
     # app.run()
-    socketio.run(app)
+    socketServer.run(app)

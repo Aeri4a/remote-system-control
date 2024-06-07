@@ -13,6 +13,8 @@ const useConnectionSocket = ({ serverState, updateServerState }: ConnectionSocke
   const socket = io(SOCKET_URL, { autoConnect: false });
   const [timeoutID, setTimeoutID] = useState<number | undefined>(undefined);
 
+  // check if socket connection is lost in case waiting
+  // if it is then check connection to backend
   useEffect(() => {
     switch (serverState) {
       case ServerState.ACTIVE:
@@ -23,7 +25,8 @@ const useConnectionSocket = ({ serverState, updateServerState }: ConnectionSocke
         setTimeoutID(id);
         break;
       case ServerState.WAITING:
-        socket.connect();
+        if (!socket.connected) socket.connect();
+        
         socket.on("SERVER_ACTIVE", () => {
             clearTimeout(timeoutID);
             updateServerState(ServerState.ACTIVE);
