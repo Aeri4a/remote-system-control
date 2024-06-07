@@ -6,17 +6,14 @@ import {
   StyledHeader,
   Topbar,
 } from "./DashboatdView.styles";
-import ConnectionBox, { ConnectionText, StatusColor } from "../ConnectionBox";
+import ConnectionBox from "../ConnectionBox";
 import { Box, Button } from "@chakra-ui/react";
 
 const DashboardView: FunctionComponent = () => {
   return (
     <Container>
       <Topbar>
-        <ConnectionBox
-          statusColor={StatusColor.ACTIVE}
-          contentText={ConnectionText.ACTIVE}
-        />
+        <ConnectionBox />
       </Topbar>
       <Content>
         <Box flexGrow={3} display="flex" flexDirection="column" m={5} gap={3}>
@@ -29,17 +26,10 @@ const DashboardView: FunctionComponent = () => {
             alignItems="center"
           >
             <Box p={4}>
-              <Button size="lg">Connect</Button>
+              <Button size="lg" width={200}>Logging test</Button>
             </Box>
             <Box p={4}>
-              <Button size="lg">Disonnect</Button>
-            </Box>
-            <Box p={4}>
-              <Button size="lg">Check connection</Button>
-            </Box>
-
-            <Box p={4}>
-              <Button size="lg">Device WakeOnLAN</Button>
+              <Button size="lg" width={200}>Device WakeOnLAN</Button>
             </Box>
           </Box>
         </Box>

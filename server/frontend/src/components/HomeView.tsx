@@ -6,7 +6,7 @@ import {
   Container,
   Text,
 } from "@chakra-ui/react";
-import ConnectionBox, { ConnectionText, StatusColor } from "./ConnectionBox";
+import ConnectionBox from "./ConnectionBox";
 
 const HomeView: FunctionComponent = () => {
   return (
@@ -32,10 +32,7 @@ const HomeView: FunctionComponent = () => {
           </Text>
         </CardHeader>
         <CardFooter>
-          <ConnectionBox
-            statusColor={StatusColor.CLOSED}
-            contentText={ConnectionText.CLOSED}
-          />
+          <ConnectionBox/>
         </CardFooter>
       </Card>
     </Container>

@@ -27,6 +27,39 @@ def test_disconnect():
 
 
 # --- RestAPI ---
+@app.route("/api/server-status", methods=["GET"])
+def serverStatus():
+    print("[S] - Establishing connection with trusted server...")
+    client = SSHClient()
+    client.set_missing_host_key_policy(AutoAddPolicy())
+    try:
+        client.connect(
+            hostname=varsEnv[Env.TRUSTED_SERVER_IP],
+            port=varsEnv[Env.TRUSTED_SERVER_PORT],
+            username=varsEnv[Env.TRUSTED_SERVER_USER],
+            password=varsEnv[Env.TRUSTED_SERVER_PASSWORD]
+        )
+    except:
+        print("[S] - Error ocurred during connection")
+        return { "error": "Cannot connect" }, 500
+    
+    print("[S] - Connection established")
+
+    print("[S] - Fetching saved information about server...")
+    stdin, stdout, stderr = client.exec_command(
+        f'cat {varsEnv[Env.FILE_PATH_SERVER]}'
+    )
+    stdin.close()
+    print("[S] - Information gained")
+
+    status = parseConfigFile(stdout)
+
+    print("[S] - Closing connection")
+    client.close()
+
+    return { "serverStatus": True if status[ConInfo.SERVER_CONNECT] == ConInfo.TRUE.value else False }, 200
+
+
 @app.route("/api/connect", methods=["GET"])
 def connect():
     print("[S] - Establishing connection with trusted server...")
