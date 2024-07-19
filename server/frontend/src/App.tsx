@@ -20,7 +20,7 @@ export enum ServerState {
 const App = () => {
   const toast = useToast();
   const [serverState, setServerState] = useState<ServerState>(ServerState.NOT_ACTIVE);
-  const socketx = useConnectionSocket({ serverState, updateServerState: setServerState });
+  useConnectionSocket({ serverState, updateServerState: setServerState });
 
   const CurrentView = () => {
     switch (serverState) {
@@ -70,7 +70,7 @@ const App = () => {
           position: 'top'
         });
         setServerState(ServerState.NOT_ACTIVE);
-        setTimeout(() => location.reload(), 5000);
+        setTimeout(() => { location.reload(); }, 5000);
       });
   }, []);
   

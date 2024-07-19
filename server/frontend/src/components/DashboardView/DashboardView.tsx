@@ -7,9 +7,32 @@ import {
   Topbar,
 } from "./DashboatdView.styles";
 import ConnectionBox from "../ConnectionBox";
-import { Box, Button } from "@chakra-ui/react";
+import { Box, Button, useToast } from "@chakra-ui/react";
+import { API_URL } from "../../config/config";
+import axios from "axios";
+
+const macAddress = '';
 
 const DashboardView: FunctionComponent = () => {
+  const toast = useToast();
+
+  const devicewol = () => {
+    const payload = { mac: macAddress, broadcast: '' }
+
+    axios.post(`${API_URL}/devicewol`, payload).then(_ => {
+      toast({
+        title: 'Run success',
+        status: 'success'
+      })
+    }).catch(err => {
+      toast({
+        title: 'An error occured :\'(',
+        status: 'error'
+      })
+      console.log(err);
+    });
+  }
+
   return (
     <Container>
       <Topbar>
@@ -29,7 +52,7 @@ const DashboardView: FunctionComponent = () => {
               <Button size="lg" width={200}>Logging test</Button>
             </Box>
             <Box p={4}>
-              <Button size="lg" width={200}>Device WakeOnLAN</Button>
+              <Button size="lg" width={200} onClick={devicewol}>Device WakeOnLAN</Button>
             </Box>
           </Box>
         </Box>

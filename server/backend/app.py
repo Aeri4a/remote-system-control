@@ -4,32 +4,48 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from flask_socketio import SocketIO, emit
 from socketio import Client
+from time import sleep
 from utils import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret'
     
 CORS(app, origins='*', methods=["GET", "POST"], resources={r"/*": {"origins": "*", "allow_headers": "*", "expose_headers": "*"}})
-socketServer = SocketIO(app, cors_allowed_origins='*', always_connect=True)
+socketServer = SocketIO(app, cors_allowed_origins='*', always_connect=True, logger=True, engineio_logger=True)
 
 with open(".env", "r") as envFile:
     varsEnv = parseConfigFile(envFile)
 
 # --- WebSocket Client ---
-socketClient = Client(f'http://openssh:{varsEnv[Env.OUT_API_PORT]}')
+socketClient = Client()
 
 # --- WebSocket Server ---
 @socketServer.on('connect')
 def WSServerConnect():
     print('Client connected')
-    socketClient.connect(retry=True)
+    print(f'Connecting to: http://openssh:{varsEnv[Env.OUT_API_PORT]}')
+    test = f'ws://openssh:{varsEnv[Env.OUT_API_PORT]}'
+    if socketClient.connected:
+        print('Disconnecting second backend')
+        socketClient.disconnect()
+        sleep(2)
+    
+    print('TRYING TO CONNECT')
+    socketClient.connect(url=test, wait=True, retry=True)
+
+    print('Connected to client sucessfully')
 
 @socketServer.on('disconnect')
 def WSServerDisconnect():
     print('Client disconnected')
     socketClient.disconnect()
 
-@socketServer.on('SERVER_ACTIVE')
+@socketClient.on('disconnect')
+def WSClientDisconnect():
+    print('Second backend disconnected')
+    socketServer.emit('disconnect')
+
+@socketClient.on('SERVER_ACTIVE')
 def WSClientServerStatus():
     print('Recieved provider status')
     socketServer.emit('SERVER_ACTIVE')
@@ -160,4 +176,4 @@ def mapDevicewol():
 
 if __name__ == "__main__":
     # app.run()
-    socketServer.run(app)
+    socketServer.run(app, debug=True)

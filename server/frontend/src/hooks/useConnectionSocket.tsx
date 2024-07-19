@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { io } from "socket.io-client";
 import { ServerState } from "../App";
 
@@ -11,32 +11,34 @@ interface ConnectionSocket {
 
 const useConnectionSocket = ({ serverState, updateServerState }: ConnectionSocket) => {
   const socket = io(SOCKET_URL, { autoConnect: false });
-  const [timeoutID, setTimeoutID] = useState<number | undefined>(undefined);
 
-  // check if socket connection is lost in case waiting
-  // if it is then check connection to backend
   useEffect(() => {
+    if (socket.disconnected) {
+      socket.removeAllListeners('SERVER_ACTIVE');
+      socket.removeAllListeners('disconnect');
+    };
+
     switch (serverState) {
       case ServerState.ACTIVE:
-        const id = setTimeout(() => {
-            updateServerState(ServerState.WAITING);
-            console.log('Connection timeout');
-        }, 5000); // 5 sec
-        setTimeoutID(id);
         break;
       case ServerState.WAITING:
-        if (!socket.connected) socket.connect();
-        
-        socket.on("SERVER_ACTIVE", () => {
-            clearTimeout(timeoutID);
+        if (socket.disconnected) {
+          socket.connect();
+          socket.on
+          socket.on('SERVER_ACTIVE', () => {
             updateServerState(ServerState.ACTIVE);
-        });
+          });
+          socket.on('disconnect', () => {
+            updateServerState(ServerState.WAITING);
+          });
+        };
         break;
       case ServerState.NOT_ACTIVE:
+        socket.offAny();
         socket.close();
         break;
     };
-  }, [serverState]);
+  }, [serverState, socket]);
 
   useEffect(() => {
     socket.close();
