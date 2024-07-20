@@ -26,14 +26,14 @@ def WSServerConnect():
     print(f'Connecting to: http://openssh:{varsEnv[Env.OUT_API_PORT]}')
     test = f'ws://openssh:{varsEnv[Env.OUT_API_PORT]}'
     if socketClient.connected:
-        print('Disconnecting second backend')
+        print('Disconnecting provider to reconnect')
         socketClient.disconnect()
         sleep(2)
     
-    print('TRYING TO CONNECT')
+    print('Trying to connect to provider...')
     socketClient.connect(url=test, wait=True, retry=True)
 
-    print('Connected to client sucessfully')
+    print('Connected to provider sucessfully')
 
 @socketServer.on('disconnect')
 def WSServerDisconnect():
@@ -42,7 +42,7 @@ def WSServerDisconnect():
 
 @socketClient.on('disconnect')
 def WSClientDisconnect():
-    print('Second backend disconnected')
+    print('Provider disconnected')
     socketServer.emit('disconnect')
 
 @socketClient.on('SERVER_ACTIVE')

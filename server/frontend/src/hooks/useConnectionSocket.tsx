@@ -24,24 +24,26 @@ const useConnectionSocket = ({ serverState, updateServerState }: ConnectionSocke
       case ServerState.WAITING:
         if (socket.disconnected) {
           socket.connect();
-          socket.on
           socket.on('SERVER_ACTIVE', () => {
             updateServerState(ServerState.ACTIVE);
           });
           socket.on('disconnect', () => {
             updateServerState(ServerState.WAITING);
+            socket.disconnect();
           });
         };
         break;
       case ServerState.NOT_ACTIVE:
         socket.offAny();
-        socket.close();
+        socket.disconnect();
         break;
     };
   }, [serverState, socket]);
 
   useEffect(() => {
-    socket.close();
+    return () => {
+      socket.disconnect();
+    }
   }, []);
 
   return {
