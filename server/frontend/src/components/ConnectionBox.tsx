@@ -13,9 +13,9 @@ export enum StatusColor {
 }
 
 export enum ConnectionText {
-  ACTIVE = "Disallow connections",
-  WAITING = "Waiting for the connection",
-  NOT_ACTIVE = "Allow connections",
+  ACTIVE = "Cancel connection",
+  WAITING = "Waiting for connection",
+  NOT_ACTIVE = "Allow connection",
 }
 
 const StatusCirle = styled.div<{ $color: StatusColor }>`

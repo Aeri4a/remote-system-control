@@ -11,7 +11,6 @@ export const Topbar = styled.div({
     display: 'flex',
     height: '60px',
     alignItems: 'center',
-    backgroundColor: 'var(--chakra-colors-gray-900)',
     justifyContent: 'flex-end',
     padding: '30px'
 });
@@ -33,7 +32,7 @@ export const LogContainer = styled.div({
 
 export const StyledHeader = styled(Box)({
     fontSize: '30px',
-    backgroundColor: 'var(--chakra-colors-gray-600)',
+    backgroundColor: 'var(--chakra-colors-gray-600)', // to remove
     borderRadius: '5px',
     textAlign: 'center',
     fontWeight: '700'

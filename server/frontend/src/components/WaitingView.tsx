@@ -19,8 +19,8 @@ const Background = styled.div({
 });
 
 const WaitingView: FunctionComponent = () => {
-  const [counter, setCounter] = useState<number>(0);
   const toast = useToast();
+  const [counter, setCounter] = useState<number>(0);
   const { updateServerState } = useContext(ServerContext)!;
 
   const handleDisallow = () => {
@@ -68,7 +68,7 @@ const WaitingView: FunctionComponent = () => {
         <Text fontSize={30}>
           {"Waiting for connection" + ".".repeat(counter)}
         </Text>
-        <Button onClick={handleDisallow}>Disallow connection</Button>
+        <Button onClick={handleDisallow}>Cancel</Button>
       </Box>
     </Background>
   );
