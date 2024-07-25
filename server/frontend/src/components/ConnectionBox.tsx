@@ -1,8 +1,8 @@
 import { FunctionComponent, useContext } from "react";
-import { Box, Button, Text, useToast } from "@chakra-ui/react";
+import { Button, Text, useToast } from "@chakra-ui/react";
 import styled from "styled-components";
 import axios from "axios";
-import { API_URL } from "../config/config";
+import { API_URL, Colors } from "../config/config";
 import { ServerState } from "../App";
 import { ServerContext } from "../context/ServerContext";
 
@@ -19,8 +19,8 @@ export enum ConnectionText {
 }
 
 const StatusCirle = styled.div<{ $color: StatusColor }>`
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 10px;
   background-color: ${({ $color }) => $color};
 `;
@@ -61,12 +61,11 @@ const ConnectionBox: FunctionComponent= () => {
         });
         updateServerState(ServerState.WAITING);
       })
-      .catch((err) => {
+      .catch(() => {
         toast({
           title: "An error occured :'(",
           status: "error",
         });
-        console.log(err);
       });
   };
 
@@ -103,12 +102,15 @@ const ConnectionBox: FunctionComponent= () => {
   };
 
   return (
-    <Box display="flex" alignItems="center" gap={5}>
+    <Button
+      size="lg"
+      gap={5}
+      backgroundColor={Colors.C1}
+      onClick={handleClick()}
+    >
+      <Text fontSize={15}>{statusText()}</Text>
       <StatusCirle $color={statusColor()} />
-      <Button size="lg" onClick={handleClick()}>
-        <Text fontSize={25}>{statusText()}</Text>
-      </Button>
-    </Box>
+    </Button>
   );
 };
 

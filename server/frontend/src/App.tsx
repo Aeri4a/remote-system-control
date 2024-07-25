@@ -19,7 +19,7 @@ export enum ServerState {
 
 const App = () => {
   const toast = useToast();
-  const [serverState, setServerState] = useState<ServerState>(ServerState.ACTIVE);
+  const [serverState, setServerState] = useState<ServerState>(ServerState.NOT_ACTIVE);
   useConnectionSocket({ serverState, updateServerState: setServerState });
 
   const CurrentView = () => {

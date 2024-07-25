@@ -1,12 +1,11 @@
 import { FunctionComponent } from "react";
 import {
-  Card,
-  CardFooter,
-  CardHeader,
   Container,
   Text,
+  Box
 } from "@chakra-ui/react";
 import ConnectionBox from "./ConnectionBox";
+import { Colors } from "../config/config";
 
 const HomeView: FunctionComponent = () => (
   <Container
@@ -15,24 +14,34 @@ const HomeView: FunctionComponent = () => (
     alignItems="center"
     justifyContent="center"
     alignContent="center"
-    maxW={800}
+    backgroundColor={Colors.C2}
+    minWidth='100%'
+    gap={5}
   >
-    <Card
-      flexGrow={1}
-      height={300}
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
+    <Box
+      backgroundColor={Colors.C3}
+      paddingLeft={10}
+      paddingRight={10}
+      paddingTop="50px"
+      paddingBottom="50px"
+      borderRadius={10}
     >
-      <CardHeader>
-        <Text fontSize={25} align="center">
-          Server is not accepting connections
-        </Text>
-      </CardHeader>
-      <CardFooter>
-        <ConnectionBox/>
-      </CardFooter>
-    </Card>
+      <Text fontSize={23} align="center">
+        Server is not accepting connections
+      </Text>
+    </Box>
+    <Box
+      borderColor={Colors.C9}
+      borderWidth={1}
+      backgroundColor={Colors.C3}
+      paddingLeft={10}
+      paddingRight={10}
+      paddingTop="42px"
+      paddingBottom="42px"
+      borderRadius={10}
+    >
+      <ConnectionBox/>
+    </Box>
   </Container>
 );
 
