@@ -13,9 +13,9 @@ export enum Colors {
   C3 = '#202020',
   C4 = '#262626',
   C5 = '#3E3E3E',
-  C7 = '#8D8D8D',
-  C8 = '#A9A9A9',
-  C9 = '#FFFFFF'
+  C6 = '#8D8D8D',
+  C7 = '#A9A9A9',
+  C8 = '#FFFFFF'
 }
   
 export const theme = extendTheme({ config: themeConfig });

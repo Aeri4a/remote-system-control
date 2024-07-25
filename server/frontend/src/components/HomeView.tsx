@@ -31,7 +31,7 @@ const HomeView: FunctionComponent = () => (
       </Text>
     </Box>
     <Box
-      borderColor={Colors.C9}
+      borderColor={Colors.C8}
       borderWidth={1}
       backgroundColor={Colors.C3}
       paddingLeft={10}

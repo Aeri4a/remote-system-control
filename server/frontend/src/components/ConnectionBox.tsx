@@ -106,6 +106,7 @@ const ConnectionBox: FunctionComponent= () => {
       size="lg"
       gap={5}
       backgroundColor={Colors.C1}
+      transition='0.8s'
       onClick={handleClick()}
     >
       <Text fontSize={15}>{statusText()}</Text>

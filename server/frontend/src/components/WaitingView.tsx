@@ -46,7 +46,7 @@ const WaitingView: FunctionComponent = () => {
 
   useEffect(() => {
     const interv = setInterval(() => {
-      setCounter((prevState) => (prevState < 3 ? prevState + 1 : 0));
+      setCounter((prevState) => (prevState < 8 ? prevState + 1 : 0));
     }, 500);
 
     return () => clearInterval(interv);
@@ -66,7 +66,7 @@ const WaitingView: FunctionComponent = () => {
         p={4}
       >
         <Text fontSize={30}>
-          {"Waiting for connection" + ".".repeat(counter)}
+          {".".repeat(counter) + "Waiting for connection" + ".".repeat(8-counter)}
         </Text>
         <Button onClick={handleDisallow}>Cancel</Button>
       </Box>

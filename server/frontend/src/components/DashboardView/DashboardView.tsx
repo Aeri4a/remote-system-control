@@ -1,23 +1,33 @@
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
+import { useToast } from "@chakra-ui/react";
+import { RiInformationLine, RiSettings4Line, RiTimelineView, RiToolsLine } from "@remixicon/react";
+
 import {
+  ActionTile,
+  ActionTileBar,
   Container,
   Content,
-  LogContainer,
-  StyledHeader,
-  Topbar,
+  FuncBox,
+  MenuOption,
+  Navbar,
+  NavbarBox,
+  NavbarConnection,
+  NavbarOptions,
+  TopBar,
 } from "./DashboatdView.styles";
 import ConnectionBox from "../ConnectionBox";
-import { Box, Button, useToast } from "@chakra-ui/react";
 import { API_URL } from "../../config/config";
+import Dialog from "../Dialog";
 import axios from "axios";
-
-const macAddress = '';
 
 const DashboardView: FunctionComponent = () => {
   const toast = useToast();
-
+  const [open, setOpen] = useState(false);
+  
+  // Temporary functional
+  const [value, setValue] = useState('');
   const devicewol = () => {
-    const payload = { mac: macAddress, broadcast: '' }
+    const payload = { mac: value, broadcast: '' }
 
     axios.post(`${API_URL}/devicewol`, payload).then(_ => {
       toast({
@@ -31,37 +41,56 @@ const DashboardView: FunctionComponent = () => {
       })
       console.log(err);
     });
+    setOpen(false);
   }
 
+  // TODO: sort & order components to other files
   return (
+    <> 
+    {/* Temporary specific dialog usage */}
+    <Dialog
+      isOpen={open}
+      onClose={() => { setOpen(false) }}
+      value={value}
+      changeValue={(e) => setValue(e.target.value)}
+      runFunction={devicewol}
+    />
     <Container>
-      <Topbar>
-        <ConnectionBox />
-      </Topbar>
-      <Content>
-        <Box flexGrow={3} display="flex" flexDirection="column" m={5} gap={3}>
-          <StyledHeader p={3}>Tools</StyledHeader>
-          <Box
-            p={3}
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
+      <Navbar>
+        <NavbarBox>
+          <NavbarConnection>
+            <ConnectionBox/>
+          </NavbarConnection>
+          <NavbarOptions>
+            <MenuOption>
+              Tools <RiToolsLine/>
+            </MenuOption>
+            <MenuOption>
+              Logger <RiTimelineView/>
+            </MenuOption>
+            <MenuOption>
+              Settings <RiSettings4Line/>
+            </MenuOption>
+          </NavbarOptions>
+        </NavbarBox>
+      </Navbar>
+      <FuncBox>
+        <TopBar>
+          Title
+        </TopBar>
+        <Content>
+          <ActionTile
+            onClick={() => { setOpen(true) }}
           >
-            <Box p={4}>
-              <Button size="lg" width={200}>Logging test</Button>
-            </Box>
-            <Box p={4}>
-              <Button size="lg" width={200} onClick={devicewol}>Device WakeOnLAN</Button>
-            </Box>
-          </Box>
-        </Box>
-        <Box flexGrow={5} display="flex" flexDirection="column" m={5} gap={3}>
-          <StyledHeader p={3}>Logs</StyledHeader>
-          <LogContainer>Log</LogContainer>
-        </Box>
-      </Content>
+            <ActionTileBar>
+            Wake on LAN
+            <RiInformationLine/>
+            </ActionTileBar>
+          </ActionTile>
+        </Content>
+      </FuncBox>
     </Container>
+    </>
   );
 };
 
